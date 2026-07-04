@@ -18,6 +18,7 @@ import { loadDraft, saveDraft } from "@/lib/storage";
 import { FormField } from "@/components/form/FormField";
 import { CheckboxGroup } from "@/components/form/CheckboxGroup";
 import { Button } from "@/components/ui/Button";
+import { SparklesIcon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
 
 interface FormValues {
@@ -272,6 +273,7 @@ export function DayContextForm({
       </FormField>
 
       <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto sm:self-start">
+        <SparklesIcon className="h-4 w-4" />
         {isSubmitting ? "Planning your day…" : "Generate my cooking plan"}
       </Button>
     </form>

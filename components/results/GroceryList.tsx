@@ -8,6 +8,7 @@ import {
 } from "@/lib/types";
 import { CATEGORY_LABELS, formatMoney } from "@/lib/format";
 import { Button } from "@/components/ui/Button";
+import { GroceryCategoryIcon, CartIcon, CopyIcon, CheckIcon } from "@/components/ui/Icon";
 
 /**
  * Grocery list grouped by aisle/category with a total and a copy-to-clipboard
@@ -23,6 +24,7 @@ export function GroceryList({
   onCopied?: (message: string) => void;
 }) {
   const [copyError, setCopyError] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const grouped = useMemo(() => {
     return GROCERY_CATEGORIES.map((category) => ({
@@ -53,6 +55,8 @@ export function GroceryList({
     try {
       await navigator.clipboard.writeText(buildText());
       setCopyError(false);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
       onCopied?.("Grocery list copied to clipboard");
     } catch {
       setCopyError(true);
@@ -62,12 +66,23 @@ export function GroceryList({
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <p className="text-sm font-medium text-text">
+        <p className="flex items-center gap-1.5 text-sm font-medium text-text">
+          <CartIcon aria-hidden="true" className="h-4 w-4 text-accent" />
           {items.length} items ·{" "}
           <span className="text-muted">{formatMoney(total, currency)}</span>
         </p>
         <Button variant="secondary" size="sm" onClick={handleCopy}>
-          Copy list
+          {copied ? (
+            <>
+              <CheckIcon className="h-4 w-4 text-success" />
+              Copied
+            </>
+          ) : (
+            <>
+              <CopyIcon className="h-4 w-4" />
+              Copy list
+            </>
+          )}
         </Button>
       </div>
 
@@ -80,7 +95,12 @@ export function GroceryList({
       <div className="flex flex-col gap-5">
         {grouped.map((group) => (
           <section key={group.category} aria-label={CATEGORY_LABELS[group.category]}>
-            <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted">
+            <h3 className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted">
+              <GroceryCategoryIcon
+                category={group.category}
+                aria-hidden="true"
+                className="h-4 w-4 text-accent"
+              />
               {CATEGORY_LABELS[group.category]}
             </h3>
             <ul className="divide-y divide-border rounded-xl border border-border bg-surface">

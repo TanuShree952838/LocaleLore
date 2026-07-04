@@ -1,6 +1,6 @@
-# 🧭 LocaleLore — Travel like a local
+# 🍳 CookFlow — Your day, turned into a cooking plan
 
-> Tell us where you're going and pick a local guide. LocaleLore gives you a **day‑by‑day trip plan** — the best places to visit, where to eat, walking routes, local crafts, and the stories behind each spot — generated end‑to‑end by **Google Gemini**.
+> Tell CookFlow about your day, budget, and diet. It returns a **timed cooking to‑do list**, recipes for each meal, a grocery list grouped by aisle, money‑saving ingredient swaps, and a real budget check — generated end‑to‑end by **Google Gemini**.
 
 <p align="left">
   <img alt="Next.js" src="https://img.shields.io/badge/Next.js-15-black?logo=next.js" />
@@ -14,29 +14,27 @@
 
 ## 📖 Project Description
 
-**What it does.** LocaleLore turns a few simple inputs (destination, dates, budget, interests, and a local guide persona) into a structured, practical travel plan: a day‑by‑day timeline, curated sights and hidden gems, authentic food spots, a walkable route, local crafts, cultural etiquette, and the folklore behind each place.
+**What it does.** CookFlow turns a few simple inputs (wake/dinner time, which meals to plan, servings, budget, dietary needs, what's in your pantry, and your skill level) into a practical, structured cooking plan for the day: a short recipe for each meal, a time‑ordered cooking checklist, a grocery list grouped by category, smart substitutions to save money, and an authoritative budget check.
 
-**Why it exists.** Most travel tools funnel everyone to the same crowded, heavily‑marketed spots, and generic AI chatbots reply with sterile guidebook text, made‑up closures, and budgets that don't add up. LocaleLore was built for **Google PromptWars** to fix that: it uses Gemini to plan *like a local friend would*, then re‑checks the AI's numbers on the server so the plan actually holds up in the real world.
+**Why it exists.** "What should I cook today, and can I afford it?" is a daily, low‑glamour problem. Generic recipe sites ignore your budget and schedule, and generic chatbots hand back untimed walls of text with made‑up prices. CookFlow was built for **Google PromptWars** to fix that: it uses Gemini to plan like a practical home cook, then **re‑computes the budget on the server** so the numbers actually hold up.
 
-Everything runs on **real Gemini responses** — no mock data, no hardcoded attractions, no fake AI.
+Everything runs on **real Gemini responses** — no mock data, no hardcoded recipes.
 
-> ℹ️ **Repository layout:** the LocaleLore application lives in the [`localelore/`](./localelore) subdirectory. All commands below assume you `cd localelore` first.
+> ℹ️ **Repository layout:** this repo hosts two PromptWars projects. **CookFlow** is the app at the repository **root** (documented here). A second project, **LocaleLore**, lives in the [`localelore/`](./localelore) subdirectory with its own [README](./localelore/README.md).
 
 ---
 
 ## ✨ Features
 
-- **Pick a local guide** — choose a persona (history, food, or crafts) and the plan is narrated in their voice.
-- **Day‑by‑day timeline** — a checkable morning‑to‑evening itinerary with durations and costs.
-- **Sights & hidden gems** — each with the reason it was chosen, cultural/historical context, best time to visit, and photo spots.
-- **Where to eat** — authentic local food picks with etiquette and tips.
-- **Walking route** — a custom, animated SVG route map (no heavy map libraries).
-- **Myths & folklore** — the stories that give a place its character.
-- **Trust & transparency** — every recommendation shows *"Why I chose this"*, and an AI‑provenance panel explains how the plan was generated.
-- **Authoritative budgeting** — totals are recomputed on the server and the plan is auto‑revised to fit when it goes over budget (AI math is never trusted).
-- **Make it yours** — toggle **Edit plan** to tweak any field inline (auto‑saved to your browser), then **Download PDF** for a clean, multi‑page copy to take offline or share.
-- **Engaging loading state** — rotating status lines and icons keep the screen alive while Gemini works.
-- **Polished, accessible UX** — Material‑inspired design, dark mode, skeleton loaders, empty/error/success states, WAI‑ARIA tabs, keyboard navigation, and WCAG‑AA contrast.
+- **Timed cooking to‑do list** — a chronological, checkable checklist with a live progress ring so nothing goes cold.
+- **Recipes per meal** — breakfast/lunch/dinner cards with steps, prep time, and estimated cost.
+- **Grocery list by aisle** — items grouped by category (produce, protein, dairy, grains, pantry, spices) with a one‑tap copy‑to‑clipboard.
+- **Smart swaps** — cheaper/healthier ingredient substitutions with the reason and the money saved.
+- **Authoritative budgeting** — the total is **recomputed on the server** from the grocery list, and the plan is auto‑revised to fit when it goes over (AI math is never trusted).
+- **Download PDF** — export the whole plan as a clean, multi‑page PDF (jsPDF, lazy‑loaded on demand).
+- **Engaging loading state** — rotating health‑ and food‑minded "thoughts" with kitchen icons keep the screen alive while Gemini works.
+- **Dietary aware** — vegetarian, vegan, gluten‑free, high‑protein and more, plus an "ingredients to avoid" list.
+- **Polished, accessible UX** — Material‑inspired design with a cohesive icon set, dark mode, skeleton loaders, empty/error/success states, WAI‑ARIA tabs, keyboard navigation, and WCAG‑AA contrast.
 
 ---
 
@@ -47,7 +45,7 @@ Everything runs on **real Gemini responses** — no mock data, no hardcoded attr
 | Framework  | **Next.js 15** (App Router)                   |
 | Language   | **TypeScript** (strict)                       |
 | Styling    | **Tailwind CSS** (CSS‑variable theming)       |
-| Icons      | **lucide-react**                              |
+| Icons      | Hand‑built, dependency‑free **SVG icon set**  |
 | AI         | **Google Gemini** via `@google/generative-ai` |
 | Validation | **Zod** (input + AI output)                   |
 | PDF export | **jsPDF** (lazy‑loaded on demand)             |
@@ -67,7 +65,7 @@ Everything runs on **real Gemini responses** — no mock data, no hardcoded attr
 ```bash
 # 1. Clone the repository
 git clone https://github.com/TanuShree952838/LocaleLore.git
-cd LocaleLore/localelore
+cd LocaleLore            # CookFlow is the project at the repo root
 
 # 2. Install dependencies
 npm install
@@ -81,7 +79,7 @@ npm run dev
 #    → http://localhost:3000
 ```
 
-Prefer a different port? `npm run dev -- -p 3005`.
+Prefer a different port? `npm run dev -- -p 3006`.
 
 ---
 
@@ -89,15 +87,13 @@ Prefer a different port? `npm run dev -- -p 3005`.
 
 ### Using the app
 1. Open the app in your browser.
-2. Fill in your **destination, dates, budget, and interests**.
-3. **Pick a local guide** persona.
-4. Click **Create my travel plan** — Gemini builds a day‑by‑day plan.
-5. Explore the tabs: **Timeline**, **Sights & crafts**, **Walking route**, and **Flavors & customs**. Your last plan is saved locally and restored on refresh.
-6. Want changes? Toggle **Edit plan** to tweak any field (changes save automatically), or **Download PDF** to save/share your itinerary offline.
+2. Choose **which meals** to plan and enter your **wake/dinner time, servings, budget, and dietary needs**.
+3. Optionally add **what's in your pantry** so CookFlow plans around it to save money.
+4. Click **Generate my cooking plan** — Gemini builds the plan in a few seconds.
+5. Explore the tabs: **Meals**, **To‑Do**, **Grocery**, and **Swaps**. Your last plan is saved locally and restored on refresh.
+6. **Copy** the grocery list to your clipboard, or **Download PDF** to take the whole plan offline.
 
 ### Key scripts
-
-Run these from inside the `localelore/` directory:
 
 ```bash
 npm run dev          # Start the dev server (http://localhost:3000)
@@ -105,7 +101,7 @@ npm run build        # Production build (also type-checks)
 npm run start        # Serve the production build
 npm run lint         # ESLint (no-console, no unused, etc.)
 npm run typecheck    # Strict TypeScript, no emit
-npm test             # Run all 50 Vitest tests
+npm test             # Run all 55 Vitest tests
 npm run test:watch   # Run tests in watch mode
 ```
 
@@ -118,15 +114,20 @@ npm run test:watch   # Run tests in watch mode
 The browser never talks to Gemini directly — it calls the app's own server route:
 
 ```bash
-curl -X POST http://localhost:3000/api/generate-travel \
+curl -X POST http://localhost:3000/api/generate-plan \
   -H "Content-Type: application/json" \
   -d '{
-    "destination": "Kyoto, Japan",
-    "days": 2,
-    "budget": 200,
-    "currency": "USD",
-    "interests": ["history", "food"],
-    "residentGuide": "historian"
+    "wakeTime": "07:00",
+    "dinnerTime": "20:00",
+    "scheduleNote": "Busy work day, short lunch break",
+    "includeMeals": ["breakfast", "lunch", "dinner"],
+    "servings": 2,
+    "budget": 800,
+    "currency": "INR",
+    "dietary": ["vegetarian", "high-protein"],
+    "avoid": "mushrooms",
+    "pantry": "rice, onions, tomatoes, eggs",
+    "skill": "beginner"
   }'
 ```
 
@@ -136,22 +137,15 @@ A successful response returns a validated, normalized plan plus metadata:
 {
   "plan": {
     "summary": "...",
-    "timeline": [ /* day-by-day slots with times, costs, and notes */ ],
-    "attractions": [ /* sights with "whySelected", best time, photo spots */ ],
-    "walkingRoute": [ /* ordered waypoints for the SVG map */ ],
-    "budget": { "total": 186, "status": "within_budget", "remaining": 14 }
+    "meals":         [ /* per-meal recipe, steps, prep time, cost */ ],
+    "tasks":         [ /* time-ordered cooking checklist */ ],
+    "grocery":       [ /* items with quantity, category, cost */ ],
+    "substitutions": [ /* cheaper/healthier swaps + savings */ ],
+    "budget": { "status": "within_budget", "estimatedTotal": 740, "remaining": 60 }
   },
   "meta": { "model": "gemini-2.5-flash", "cached": false, "revised": false }
 }
 ```
-
-### Demo walkthrough
-1. **Pick a guide** → e.g. *the history guide* for folklore and old‑town routes.
-2. **Query a city** (e.g. Kyoto) → get opinionated local picks, not tourist traps.
-3. **Open any card** → read *"Why I chose this"* and the cultural context.
-4. **Check the budget** → the server has already re‑summed costs and flagged if it's over.
-
-> 📸 *Tip: add screenshots or a short GIF of the dashboard here to make the README pop.*
 
 ---
 
@@ -168,7 +162,7 @@ flowchart LR
   end
 
   subgraph Server["Next.js Server (Node runtime)"]
-    API["POST /api/generate-travel"]
+    API["POST /api/generate-plan"]
     RL["Rate limiter"]
     VAL["Zod input validation"]
     CACHE["Input-hash cache"]
@@ -180,7 +174,7 @@ flowchart LR
     GEM["gemini-2.5-flash<br/>structured JSON output"]
   end
 
-  UI -->|"POST preferences"| API
+  UI -->|"POST day context"| API
   API --> RL --> VAL --> CACHE
   CACHE -->|"miss"| SAN --> GEM
   GEM -->|"validated JSON"| NORM --> API
@@ -188,27 +182,32 @@ flowchart LR
   API -->|"plan + meta"| UI
 ```
 
-**How Gemini is used:** one real Gemini call per generation with a `system` instruction (persona + rules + prompt‑injection defenses) and JSON output. The response is `JSON.parse`d and validated with Zod; on malformed output there's **one self‑repair retry** before failing. Timeouts, rate limits, and upstream errors map to typed error codes, and the server recomputes the budget so the AI's arithmetic is never trusted.
+**How Gemini is used:** each generation makes a real Gemini call configured with a native `responseSchema` (structured JSON output) so the model returns exactly the shape we need. Two reliability details matter:
+
+- **Thinking is disabled** (`thinkingConfig.thinkingBudget: 0`). On `gemini-2.5-flash`, "thinking" tokens are drawn from the same output budget and were truncating the JSON; turning them off makes responses **complete and ~2× faster**.
+- **Model fallback chain** — `gemini-2.5-flash` → `gemini-2.5-flash-lite`, with a single **self‑repair retry** if the JSON fails Zod validation.
+
+The response is `JSON.parse`d and validated with Zod, timeouts/rate‑limits/upstream errors map to typed error codes, and the server **recomputes the budget** so the AI's arithmetic is never trusted.
 
 ---
 
 ## 🔑 Environment Variables
 
-Create `localelore/.env.local` from `.env.example`:
+Create `.env.local` from `.env.example`:
 
-| Variable                | Required | Default            | Description                                                          |
-| ----------------------- | -------- | ------------------ | -------------------------------------------------------------------- |
-| `GEMINI_API_KEY`        | ✅       | —                  | Server‑only Gemini key. **Never** prefix with `NEXT_PUBLIC_`.        |
-| `GEMINI_MODEL`          | ❌       | `gemini-2.5-flash` | Override the Gemini model.                                           |
-| `RATE_LIMIT_MAX`        | ❌       | `10`               | Requests allowed per IP inside the rate‑limit window.               |
-| `RATE_LIMIT_WINDOW_MS`  | ❌       | `60000`            | Rate‑limit window in milliseconds (60000 = 1 minute).               |
+| Variable                | Required | Default            | Description                                                   |
+| ----------------------- | -------- | ------------------ | ------------------------------------------------------------- |
+| `GEMINI_API_KEY`        | ✅       | —                  | Server‑only Gemini key. **Never** prefix with `NEXT_PUBLIC_`. |
+| `GEMINI_MODEL`          | ❌       | `gemini-2.5-flash` | Override the primary Gemini model.                            |
+| `RATE_LIMIT_MAX`        | ❌       | `10`               | Requests allowed per IP inside the rate‑limit window.         |
+| `RATE_LIMIT_WINDOW_MS`  | ❌       | `60000`            | Rate‑limit window in milliseconds (60000 = 1 minute).         |
 
 ---
 
 ## 🧪 Testing
 
 ```bash
-npm test          # run all 50 tests (Vitest)
+npm test          # run all 55 tests (Vitest)
 npm run typecheck # strict TypeScript
 npm run lint      # ESLint
 ```
@@ -219,10 +218,12 @@ Coverage spans input & AI‑output validation, sanitization / prompt‑injection
 
 ## ☁️ Deployment (Vercel)
 
+CookFlow deploys from the **repository root** (LocaleLore is a separate Vercel project pointing at `localelore/`).
+
 1. Push the repo to GitHub.
-2. Import it in Vercel and set the **root directory** to `localelore/`.
+2. Import it in Vercel and leave the **Root Directory** as the repo root (`.`).
 3. Add the environment variable `GEMINI_API_KEY` (Production + Preview).
-4. Deploy — the **Next.js** preset is auto‑detected; no extra config.
+4. Deploy — the **Next.js** preset is auto‑detected; no extra config. The plan API is allowed up to 60s (`maxDuration`), which fits the Vercel Hobby plan.
 5. Smoke‑test the live URL by generating a plan a couple of times.
 
 ---
@@ -244,4 +245,4 @@ Questions, feedback, or ideas? Open an [issue](https://github.com/TanuShree95283
 
 ---
 
-<sub>LocaleLore · Travel like a local · Powered by Google Gemini. Plans are AI‑generated — please double‑check opening hours, prices, and local rules before you go.</sub>
+<sub>CookFlow · AI cooking to‑do list · Powered by Google Gemini. Plans are AI‑generated — please double‑check quantities, prices, and dietary needs before you cook.</sub>

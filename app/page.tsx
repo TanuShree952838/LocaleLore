@@ -11,6 +11,7 @@ import { ResultsErrorBoundary } from "@/components/results/ResultsErrorBoundary"
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ErrorBanner } from "@/components/ui/ErrorBanner";
 import { Toast } from "@/components/ui/Toast";
+import { ChefHatIcon } from "@/components/ui/Icon";
 
 export default function HomePage() {
   const { status, plan, meta, error, generate } = useGeneratePlan();
@@ -74,8 +75,9 @@ export default function HomePage() {
 
           {status === "idle" && (
             <EmptyState
-              title="No plan yet"
-              description="Fill in your day on the left and generate a personalized cooking plan."
+              icon={<ChefHatIcon className="h-8 w-8" />}
+              title="Your kitchen, planned"
+              description="Fill in your day on the left and CookFlow will plan your meals, timing, grocery run, and budget in seconds."
             />
           )}
         </section>

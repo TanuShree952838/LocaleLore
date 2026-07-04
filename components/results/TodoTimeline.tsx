@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import type { CookingTask } from "@/lib/types";
 import { formatDuration, MEAL_LABELS } from "@/lib/format";
 import { Badge } from "@/components/ui/Badge";
+import { ProgressRing } from "@/components/ui/ProgressRing";
+import { ClockIcon, MealSlotIcon, CheckIcon, ListChecksIcon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
 
 /**
@@ -28,15 +30,27 @@ export function TodoTimeline({ tasks }: { tasks: CookingTask[] }) {
     });
   };
 
+  const allDone = tasks.length > 0 && completedCount === tasks.length;
+
   return (
     <div>
-      <div className="mb-4 flex items-center justify-between">
-        <p className="text-sm font-medium text-text">
-          {completedCount} of {tasks.length} tasks done
-        </p>
-        <span className="text-sm text-muted" aria-live="polite">
-          {percent}%
-        </span>
+      <div className="mb-4 flex items-center gap-3 rounded-xl border border-border bg-surface p-3 shadow-e1">
+        <ProgressRing value={percent} size={48} stroke={5} label="Cooking progress">
+          {allDone ? (
+            <CheckIcon aria-hidden="true" className="h-5 w-5 text-success" />
+          ) : (
+            <span className="text-xs font-semibold text-text">{percent}%</span>
+          )}
+        </ProgressRing>
+        <div className="min-w-0">
+          <p className="flex items-center gap-1.5 text-sm font-semibold text-text">
+            <ListChecksIcon className="h-4 w-4 text-accent" />
+            {allDone ? "All done — enjoy your meal!" : "Cooking checklist"}
+          </p>
+          <p className="text-xs text-muted" aria-live="polite">
+            {completedCount} of {tasks.length} tasks done
+          </p>
+        </div>
       </div>
 
       <ul className="flex flex-col gap-2">
@@ -59,7 +73,8 @@ export function TodoTimeline({ tasks }: { tasks: CookingTask[] }) {
                   onChange={() => toggle(task.id)}
                   className="h-5 w-5 shrink-0 rounded border-border text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 />
-                <span className="w-14 shrink-0 font-mono text-sm font-medium text-accent">
+                <span className="flex w-16 shrink-0 items-center gap-1 font-mono text-sm font-medium text-accent">
+                  <ClockIcon aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
                   {task.time}
                 </span>
                 <span
@@ -71,7 +86,10 @@ export function TodoTimeline({ tasks }: { tasks: CookingTask[] }) {
                   {task.title}
                 </span>
                 <span className="hidden shrink-0 sm:block">
-                  <Badge tone="neutral">{MEAL_LABELS[task.meal]}</Badge>
+                  <Badge tone="neutral">
+                    <MealSlotIcon slot={task.meal} className="h-3.5 w-3.5" />
+                    {MEAL_LABELS[task.meal]}
+                  </Badge>
                 </span>
                 <span className="shrink-0 text-xs text-muted">
                   {formatDuration(task.durationMinutes)}

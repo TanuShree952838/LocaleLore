@@ -1,15 +1,23 @@
+import type { ComponentType } from "react";
 import type { BudgetFeasibility } from "@/lib/types";
 import { formatMoney } from "@/lib/format";
 import { Badge } from "@/components/ui/Badge";
+import {
+  type IconProps,
+  WalletIcon,
+  CheckCircleIcon,
+  AlertIcon,
+  InfoIcon,
+} from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
 
 const STATUS_META: Record<
   BudgetFeasibility["status"],
-  { label: string; tone: "success" | "warning" | "danger" }
+  { label: string; tone: "success" | "warning" | "danger"; Icon: ComponentType<IconProps> }
 > = {
-  within_budget: { label: "Within budget", tone: "success" },
-  revised_to_fit: { label: "Revised to fit", tone: "warning" },
-  over_budget: { label: "Over budget", tone: "danger" },
+  within_budget: { label: "Within budget", tone: "success", Icon: CheckCircleIcon },
+  revised_to_fit: { label: "Revised to fit", tone: "warning", Icon: InfoIcon },
+  over_budget: { label: "Over budget", tone: "danger", Icon: AlertIcon },
 };
 
 export function BudgetFeasibilityCard({ budget }: { budget: BudgetFeasibility }) {
@@ -27,10 +35,17 @@ export function BudgetFeasibilityCard({ budget }: { budget: BudgetFeasibility })
       className="rounded-2xl border border-border bg-surface p-5"
     >
       <div className="flex items-center justify-between gap-3">
-        <h2 id="budget-heading" className="text-sm font-semibold text-text">
+        <h2
+          id="budget-heading"
+          className="flex items-center gap-1.5 text-sm font-semibold text-text"
+        >
+          <WalletIcon aria-hidden="true" className="h-4 w-4 text-accent" />
           Budget feasibility
         </h2>
-        <Badge tone={meta.tone}>{meta.label}</Badge>
+        <Badge tone={meta.tone}>
+          <meta.Icon className="h-3.5 w-3.5" />
+          {meta.label}
+        </Badge>
       </div>
 
       <div className="mt-4 flex items-end justify-between">

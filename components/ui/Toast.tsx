@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { CheckCircleIcon } from "@/components/ui/Icon";
 
 /**
  * Transient success notification. Rendered in a polite live region so screen
@@ -26,7 +27,7 @@ export function Toast({
       aria-live="polite"
       className="fixed inset-x-0 bottom-4 z-50 mx-auto flex w-fit max-w-[90vw] items-center gap-2 rounded-full border border-success/30 bg-surface px-4 py-2 text-sm font-medium text-text shadow-lg animate-fade-in"
     >
-      <span aria-hidden="true" className="h-2 w-2 rounded-full bg-success" />
+      <CheckCircleIcon aria-hidden="true" className="h-4 w-4 shrink-0 text-success" />
       {message}
     </div>
   );

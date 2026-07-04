@@ -7,6 +7,7 @@ export interface TabItem {
   id: string;
   label: string;
   badge?: number;
+  icon?: ReactNode;
   content: ReactNode;
 }
 
@@ -84,6 +85,11 @@ export function Tabs({ items, ariaLabel }: { items: TabItem[]; ariaLabel: string
                   : "text-muted hover:bg-surface-2 hover:text-text",
               )}
             >
+              {item.icon && (
+                <span aria-hidden="true" className="shrink-0">
+                  {item.icon}
+                </span>
+              )}
               {item.label}
               {typeof item.badge === "number" && (
                 <span

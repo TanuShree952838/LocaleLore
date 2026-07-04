@@ -5,7 +5,14 @@ import type { MealPlan, PlanMeta } from "@/lib/types";
 import { Tabs, type TabItem } from "@/components/ui/Tabs";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { DownloadIcon } from "@/components/ui/Icon";
+import {
+  DownloadIcon,
+  ChefHatIcon,
+  ListChecksIcon,
+  CartIcon,
+  SwapIcon,
+  SparklesIcon,
+} from "@/components/ui/Icon";
 import { BudgetFeasibilityCard } from "@/components/results/BudgetFeasibilityCard";
 import { MealCard } from "@/components/results/MealCard";
 import { TodoTimeline } from "@/components/results/TodoTimeline";
@@ -42,6 +49,7 @@ export function PlanDashboard({
       id: "meals",
       label: "Meals",
       badge: plan.meals.length,
+      icon: <ChefHatIcon className="h-4 w-4" />,
       content: (
         <div className="flex flex-col gap-4">
           {plan.meals.map((meal) => (
@@ -54,18 +62,21 @@ export function PlanDashboard({
       id: "todo",
       label: "To-Do",
       badge: plan.tasks.length,
+      icon: <ListChecksIcon className="h-4 w-4" />,
       content: <TodoTimeline tasks={plan.tasks} />,
     },
     {
       id: "grocery",
       label: "Grocery",
       badge: plan.grocery.length,
+      icon: <CartIcon className="h-4 w-4" />,
       content: <GroceryList items={plan.grocery} currency={currency} onCopied={onCopied} />,
     },
     {
       id: "swaps",
       label: "Swaps",
       badge: plan.substitutions.length,
+      icon: <SwapIcon className="h-4 w-4" />,
       content: <SubstitutionsPanel substitutions={plan.substitutions} currency={currency} />,
     },
   ];
@@ -75,6 +86,12 @@ export function PlanDashboard({
       <div className="rounded-2xl border border-border bg-surface p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="flex items-center gap-2">
+            <span
+              aria-hidden="true"
+              className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent/10 text-accent"
+            >
+              <SparklesIcon className="h-4 w-4" />
+            </span>
             <h2 className="text-sm font-semibold text-text">Your plan for the day</h2>
             {meta?.cached && <Badge tone="neutral">Cached</Badge>}
           </div>
