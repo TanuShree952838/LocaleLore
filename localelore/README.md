@@ -1,5 +1,13 @@
 # 🧭 LocaleLore — Your Local Travel Guide
 
+<p align="left">
+  <img alt="Next.js" src="https://img.shields.io/badge/Next.js-15-black?logo=next.js" />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white" />
+  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-3-38BDF8?logo=tailwindcss&logoColor=white" />
+  <img alt="Google Gemini" src="https://img.shields.io/badge/Google_Gemini-2.5_Flash-4285F4?logo=google&logoColor=white" />
+  <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-green.svg" />
+</p>
+
 LocaleLore is a premium, GenAI-powered travel platform built for **Google PromptWars**. Instead of listing TripAdvisor tourist traps, LocaleLore connects travelers with authentic local cultures, unwritten social etiquette, community-run festivals, and master artisans—narrated by a chosen local resident avatar.
 
 Everything runs **end-to-end with real Gemini responses** — no mock data, no hardcoded attractions, no fake AI.
