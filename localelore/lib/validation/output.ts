@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { ATTRACTION_TYPES } from "@/lib/types";
 
-const shortText = z.string().trim().min(1).max(250);
-const longText = z.string().trim().min(1).max(1000);
+const shortText = z.string().trim().min(1).max(1000);
+const longText = z.string().trim().min(1).max(5000);
 const cost = z.number().nonnegative().finite();
 
 const rawAttractionSchema = z.object({
@@ -40,7 +40,7 @@ const rawWalkingRouteSchema = z.object({
   title: shortText,
   totalDurationMinutes: z.number().int().nonnegative().max(1440),
   waypoints: z.array(rawWaypointSchema).min(1).max(10),
-  routePathSvg: z.string().trim().max(1000).default("M 10 50 Q 50 20 90 50 T 170 50"),
+  routePathSvg: z.string().trim().max(5000).default("M 10 50 Q 50 20 90 50 T 170 50"),
 });
 
 const rawEtiquetteItemSchema = z.object({

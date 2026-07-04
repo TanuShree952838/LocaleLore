@@ -131,6 +131,7 @@ function parsePlan(text: string): ParseResult {
   }
   const parsed = rawTravelPlanSchema.safeParse(json);
   if (!parsed.success) {
+    console.error("Zod Validation Failure Details:", JSON.stringify(parsed.error.format(), null, 2));
     return { ok: false, reason: summarizeZodError(parsed.error) };
   }
   return { ok: true, value: parsed.data };

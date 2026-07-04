@@ -215,7 +215,7 @@ export function DestinationPreferencesForm({
         </div>
       </fieldset>
 
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+      <div className="space-y-4">
         <div className="grid grid-cols-3 gap-3">
           <div className="col-span-2">
             <FormField
@@ -262,14 +262,14 @@ export function DestinationPreferencesForm({
           </div>
         </div>
 
-        <div className="flex items-center pt-6">
-          <label className="relative flex cursor-pointer items-center gap-3">
+        <div className="flex items-start pt-1">
+          <label className="relative flex cursor-pointer items-start gap-3">
             <input
               type="checkbox"
               checked={sustainableFocus}
               onChange={(e) => setSustainableFocus(e.target.checked)}
               disabled={isLoading}
-              className="h-4 w-4 rounded border-border text-accent focus:ring-accent/25"
+              className="mt-1 h-4 w-4 rounded border-border text-accent focus:ring-accent/25"
             />
             <div className="leading-snug">
               <span className="text-sm font-medium text-text">Sustainable Focus</span>
@@ -281,7 +281,7 @@ export function DestinationPreferencesForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+      <div className="space-y-4">
         <FormField
           id={`${formId}-specialInterests`}
           label="Special Interests"
