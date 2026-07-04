@@ -34,7 +34,17 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script nonce={nonce} dangerouslySetInnerHTML={{ __html: themeScript }} />
+        {/*
+         * Browsers blank out the `nonce` content attribute after using it (a
+         * security feature), so the server-rendered nonce won't match the
+         * client's — suppress the resulting hydration warning. The nonce itself
+         * is still required for the production CSP to allow this inline script.
+         */}
+        <script
+          nonce={nonce}
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: themeScript }}
+        />
       </head>
       <body className="flex min-h-screen flex-col">
         <a href="#main" className="skip-link">
