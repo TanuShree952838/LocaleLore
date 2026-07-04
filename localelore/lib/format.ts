@@ -1,4 +1,4 @@
-import type { Currency, GuideArchetype, TravelStyle } from "@/lib/types";
+import type { Currency } from "@/lib/types";
 
 /** Locale-aware currency formatting; Intl provides correct symbols (₹, $, ...). */
 export function formatMoney(amount: number, currency: Currency): string {
@@ -12,20 +12,6 @@ export function formatMoney(amount: number, currency: Currency): string {
     return `${currency} ${Math.round(amount)}`;
   }
 }
-
-export const STYLE_LABELS: Record<TravelStyle, string> = {
-  balanced: "Balanced Resident Mix",
-  cultural: "Heritage & History",
-  culinary: "Culinary & Foods",
-  artisan: "Crafts & Artisans",
-  adventure: "Hidden Explorer",
-};
-
-export const GUIDE_LABELS: Record<GuideArchetype, string> = {
-  historian: "Anya the Historian",
-  foodie: "Marcus the Foodie",
-  artisan: "Kavi the Artisan",
-};
 
 /** Formats minutes as a compact human duration, e.g. 75 -> "1h 15m". */
 export function formatDuration(minutes: number): string {

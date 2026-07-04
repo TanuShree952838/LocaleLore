@@ -4,7 +4,7 @@ export function PlanSkeleton() {
   return (
     <div className="flex flex-col gap-5">
       <p className="sr-only" role="status" aria-live="polite">
-        Unveiling your cultural odyssey, please wait.
+        Building your travel plan, please wait.
       </p>
 
       <div className="rounded-2xl border border-border bg-surface p-5 glass md:p-7">

@@ -110,7 +110,11 @@ export function Tabs({ items, ariaLabel }: { items: TabItem[]; ariaLabel: string
           tabIndex={0}
           className="mt-4 focus-visible:outline-none"
         >
-          {item.id === active && item.content}
+          {item.id === active && (
+            <div key={active} className="animate-fade-in">
+              {item.content}
+            </div>
+          )}
         </div>
       ))}
     </div>

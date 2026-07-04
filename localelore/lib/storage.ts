@@ -1,11 +1,12 @@
-import type { TravelPlan } from "@/lib/types";
+import type { TravelPlan, GuideArchetype } from "@/lib/types";
 
 const PLAN_KEY = "localelore:plan:v1";
-const DRAFT_KEY = "localelore:draft:v1";
 
 export interface StoredPlan {
   plan: TravelPlan;
   savedAt: number;
+  /** The resident guide the plan was generated with, so the right narrator is restored on reload. */
+  guideType?: GuideArchetype;
 }
 
 function getStorage(): Storage | null {
@@ -48,8 +49,8 @@ function remove(key: string): void {
   }
 }
 
-export function savePlan(plan: TravelPlan): void {
-  writeJSON(PLAN_KEY, { plan, savedAt: Date.now() } satisfies StoredPlan);
+export function savePlan(plan: TravelPlan, guideType?: GuideArchetype): void {
+  writeJSON(PLAN_KEY, { plan, savedAt: Date.now(), guideType } satisfies StoredPlan);
 }
 
 export function loadPlan(): StoredPlan | null {
@@ -58,12 +59,4 @@ export function loadPlan(): StoredPlan | null {
 
 export function clearPlan(): void {
   remove(PLAN_KEY);
-}
-
-export function saveDraft<T extends object>(draft: T): void {
-  writeJSON(DRAFT_KEY, draft);
-}
-
-export function loadDraft<T extends object>(): Partial<T> | null {
-  return readJSON<Partial<T>>(DRAFT_KEY);
 }

@@ -2,17 +2,35 @@ import { useState } from "react";
 import type { Attraction, ArtisanSpotlight, Currency } from "@/lib/types";
 import { formatMoney } from "@/lib/format";
 import { Badge } from "@/components/ui/Badge";
+import {
+  ChevronDownIcon,
+  ClockIcon,
+  LightbulbIcon,
+  SunriseIcon,
+  CameraIcon,
+  NavigationIcon,
+  LeafIcon,
+  GemIcon,
+  PaletteIcon,
+} from "@/components/ui/Icon";
 
 interface AttractionsListProps {
   attractions: Attraction[];
   artisanSpotlight: ArtisanSpotlight[];
   currency: Currency;
+  isEditing?: boolean;
+  onChangeAttraction?: (
+    id: string,
+    patch: Partial<{ name: string; whySelected: string; estimatedCost: number }>,
+  ) => void;
 }
 
 export function AttractionsList({
   attractions,
   artisanSpotlight,
   currency,
+  isEditing = false,
+  onChangeAttraction,
 }: AttractionsListProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
@@ -25,7 +43,7 @@ export function AttractionsList({
     { label: string; tone: "success" | "warning" | "danger" | "neutral" }
   > = {
     attraction: { label: "Must-Visit Site", tone: "success" },
-    hidden_gem: { label: "Resident Secret", tone: "warning" },
+    hidden_gem: { label: "Hidden gem", tone: "warning" },
     artisan_workshop: { label: "Craft & Artisan", tone: "danger" },
     local_event: { label: "Community Event", tone: "neutral" },
   };
@@ -35,7 +53,7 @@ export function AttractionsList({
       <div className="space-y-1">
         <h3 className="text-sm font-bold text-text">Sights & Local Creators</h3>
         <p className="text-xs text-muted">
-          Click on any card to reveal its historical importance, resident secrets, photo spots, and sustainable impact.
+          Tap any card for its history, local tips, photo spots, and how to visit responsibly.
         </p>
       </div>
 
@@ -47,8 +65,8 @@ export function AttractionsList({
           return (
             <article
               key={attraction.id}
-              className={`rounded-3xl border border-border bg-surface p-6 shadow-sm transition-all hover:scale-[1.01] duration-300 glass ${
-                isExpanded ? "ring-1 ring-accent border-accent" : "hover:border-border/80"
+              className={`rounded-3xl border bg-surface p-6 shadow-sm transition-[box-shadow,border-color,transform] duration-300 glass hover:-translate-y-0.5 hover:shadow-e2 ${
+                isExpanded ? "ring-1 ring-accent border-accent" : "border-border hover:border-accent/40"
               }`}
             >
               <div className="flex items-start justify-between gap-3">
@@ -56,15 +74,44 @@ export function AttractionsList({
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge tone={meta.tone}>{meta.label}</Badge>
                     <span className="inline-flex items-center gap-1 text-[10px] font-bold text-muted bg-surface-2 px-2 py-0.5 rounded-full">
-                      ⏳ {attraction.timeRequired}
+                      <ClockIcon aria-hidden="true" className="h-3 w-3" />
+                      {attraction.timeRequired}
                     </span>
-                    <span className="text-xs text-muted font-medium">
-                      {formatMoney(attraction.estimatedCost, currency)}
-                    </span>
+                    {isEditing ? (
+                      <span className="flex items-center gap-1 text-xs text-muted font-medium">
+                        <input
+                          type="number"
+                          min={0}
+                          value={attraction.estimatedCost}
+                          onChange={(e) =>
+                            onChangeAttraction?.(attraction.id, {
+                              estimatedCost: e.target.value === "" ? 0 : Number(e.target.value),
+                            })
+                          }
+                          className="w-20 rounded border border-accent/40 bg-bg px-1.5 py-0.5 text-xs text-text focus:border-accent focus:outline-none"
+                          aria-label={`Cost for ${attraction.name}`}
+                        />
+                        {currency}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-muted font-medium">
+                        {formatMoney(attraction.estimatedCost, currency)}
+                      </span>
+                    )}
                   </div>
-                  <h4 className="text-lg font-black text-text leading-tight">
-                    {attraction.name}
-                  </h4>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={attraction.name}
+                      onChange={(e) => onChangeAttraction?.(attraction.id, { name: e.target.value })}
+                      className="w-full rounded border border-accent/40 bg-bg px-2 py-1 text-lg font-black text-text leading-tight focus:border-accent focus:outline-none"
+                      aria-label="Attraction name"
+                    />
+                  ) : (
+                    <h4 className="text-lg font-black text-text leading-tight">
+                      {attraction.name}
+                    </h4>
+                  )}
                   <p className="text-xs text-muted">{attraction.locationDescription}</p>
                 </div>
 
@@ -72,37 +119,45 @@ export function AttractionsList({
                   type="button"
                   onClick={() => toggleExpand(attraction.id)}
                   aria-expanded={isExpanded}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-bg text-text hover:bg-surface-2 transition-colors active:scale-90 focus:outline-none"
-                  aria-label={isExpanded ? "Show less info" : "Show more info"}
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-bg text-text transition-colors hover:bg-surface-2 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+                  aria-label={
+                    isExpanded
+                      ? `Hide details for ${attraction.name}`
+                      : `Show details for ${attraction.name}`
+                  }
                 >
-                  <svg
-                    viewBox="0 0 24 24"
-                    className={`h-4 w-4 transform transition-transform duration-300 ${
+                  <ChevronDownIcon
+                    aria-hidden="true"
+                    className={`h-4 w-4 transition-transform duration-300 ${
                       isExpanded ? "rotate-180" : ""
                     }`}
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
+                  />
                 </button>
               </div>
 
               {/* Selection Insight summary */}
-              {!isExpanded && (
+              {!isExpanded && !isEditing && (
                 <p className="mt-3 text-xs text-muted line-clamp-2 leading-relaxed">
                   {attraction.whySelected}
                 </p>
+              )}
+              {!isExpanded && isEditing && (
+                <textarea
+                  value={attraction.whySelected}
+                  onChange={(e) =>
+                    onChangeAttraction?.(attraction.id, { whySelected: e.target.value })
+                  }
+                  rows={2}
+                  className="mt-3 w-full rounded border border-accent/40 bg-bg px-2 py-1 text-xs text-text leading-relaxed focus:border-accent focus:outline-none"
+                  aria-label={`Why we chose ${attraction.name}`}
+                />
               )}
 
               {/* Expandable Details Drawer */}
               {isExpanded && (
                 <div className="mt-5 pt-4 border-t border-border/60 space-y-4 text-xs leading-relaxed animate-fade-in">
                   <div className="space-y-1">
-                    <h5 className="font-bold text-accent">Why I Chose This</h5>
+                    <h5 className="font-bold text-accent">Why I chose this</h5>
                     <p className="text-text/90">{attraction.whySelected}</p>
                   </div>
 
@@ -119,33 +174,51 @@ export function AttractionsList({
 
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div className="space-y-1">
-                      <h5 className="font-bold text-text">💡 Did You Know?</h5>
+                      <h5 className="flex items-center gap-1.5 font-bold text-text">
+                        <LightbulbIcon aria-hidden="true" className="h-3.5 w-3.5 text-accent-2" />
+                        Did You Know?
+                      </h5>
                       <p className="text-muted">{attraction.interestingFact}</p>
                     </div>
                     <div className="space-y-1">
-                      <h5 className="font-bold text-text">📍 Best Time & Light</h5>
+                      <h5 className="flex items-center gap-1.5 font-bold text-text">
+                        <SunriseIcon aria-hidden="true" className="h-3.5 w-3.5 text-accent-2" />
+                        Best Time &amp; Light
+                      </h5>
                       <p className="text-muted">{attraction.bestTime}</p>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div className="space-y-1">
-                      <h5 className="font-bold text-text">📸 Authentic Photo Spot</h5>
+                      <h5 className="flex items-center gap-1.5 font-bold text-text">
+                        <CameraIcon aria-hidden="true" className="h-3.5 w-3.5 text-accent" />
+                        Authentic Photo Spot
+                      </h5>
                       <p className="text-muted">{attraction.photoSpot}</p>
                     </div>
                     <div className="space-y-1">
-                      <h5 className="font-bold text-text">🚉 Travel & Logistics</h5>
+                      <h5 className="flex items-center gap-1.5 font-bold text-text">
+                        <NavigationIcon aria-hidden="true" className="h-3.5 w-3.5 text-accent" />
+                        Travel &amp; Logistics
+                      </h5>
                       <p className="text-muted">{attraction.travelTips}</p>
                     </div>
                   </div>
 
                   <div className="space-y-1">
-                    <h5 className="font-bold text-accent-2">🌱 Responsible Tourism Practice</h5>
+                    <h5 className="flex items-center gap-1.5 font-bold text-accent-2">
+                      <LeafIcon aria-hidden="true" className="h-3.5 w-3.5 text-success" />
+                      Responsible Tourism Practice
+                    </h5>
                     <p className="text-muted">{attraction.responsibleTip}</p>
                   </div>
 
                   <div className="space-y-1">
-                    <h5 className="font-bold text-accent-2">Secret Near Here</h5>
+                    <h5 className="flex items-center gap-1.5 font-bold text-accent-2">
+                      <GemIcon aria-hidden="true" className="h-3.5 w-3.5" />
+                      Secret Near Here
+                    </h5>
                     <p className="text-text/90 italic">{attraction.nearbyHiddenExperience}</p>
                   </div>
 
@@ -164,15 +237,16 @@ export function AttractionsList({
       {/* Artisan Spotlight Section */}
       {artisanSpotlight.length > 0 && (
         <div className="mt-8 space-y-4">
-          <h4 className="inline-block rounded-full bg-surface-3 px-4 py-1.5 text-xs font-black text-text uppercase tracking-wider">
-            🏺 Traditional Artisans & Craft Sourcing
+          <h4 className="inline-flex items-center gap-2 rounded-full bg-surface-3 px-4 py-1.5 text-xs font-black text-text uppercase tracking-wider">
+            <PaletteIcon aria-hidden="true" className="h-4 w-4 text-accent-2" />
+            Traditional Artisans &amp; Craft Sourcing
           </h4>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             {artisanSpotlight.map((artisan, idx) => (
               <div
                 key={idx}
-                className="rounded-3xl border border-border bg-surface p-5 shadow-sm hover:scale-[1.01] transition-transform duration-300 glass flex flex-col justify-between gap-3"
+                className="rounded-3xl border border-border bg-surface p-5 shadow-sm transition-[box-shadow,transform] duration-300 glass flex flex-col justify-between gap-3 hover:-translate-y-0.5 hover:shadow-e2"
               >
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">

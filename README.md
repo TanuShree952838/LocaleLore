@@ -34,6 +34,7 @@ Everything runs on **real Gemini responses** — no mock data, no hardcoded attr
 - **Myths & folklore** — the stories that give a place its character.
 - **Trust & transparency** — every recommendation shows *"Why I chose this"*, and an AI‑provenance panel explains how the plan was generated.
 - **Authoritative budgeting** — totals are recomputed on the server and the plan is auto‑revised to fit when it goes over budget (AI math is never trusted).
+- **Make it yours** — toggle **Edit plan** to tweak any field inline (auto‑saved to your browser), then **Download PDF** for a clean, multi‑page copy to take offline or share.
 - **Engaging loading state** — rotating status lines and icons keep the screen alive while Gemini works.
 - **Polished, accessible UX** — Material‑inspired design, dark mode, skeleton loaders, empty/error/success states, WAI‑ARIA tabs, keyboard navigation, and WCAG‑AA contrast.
 
@@ -49,6 +50,7 @@ Everything runs on **real Gemini responses** — no mock data, no hardcoded attr
 | Icons      | **lucide-react**                              |
 | AI         | **Google Gemini** via `@google/generative-ai` |
 | Validation | **Zod** (input + AI output)                   |
+| PDF export | **jsPDF** (lazy‑loaded on demand)             |
 | Testing    | **Vitest** + Testing Library                  |
 | Hosting    | **Vercel**                                    |
 
@@ -91,6 +93,7 @@ Prefer a different port? `npm run dev -- -p 3005`.
 3. **Pick a local guide** persona.
 4. Click **Create my travel plan** — Gemini builds a day‑by‑day plan.
 5. Explore the tabs: **Timeline**, **Sights & crafts**, **Walking route**, and **Flavors & customs**. Your last plan is saved locally and restored on refresh.
+6. Want changes? Toggle **Edit plan** to tweak any field (changes save automatically), or **Download PDF** to save/share your itinerary offline.
 
 ### Key scripts
 

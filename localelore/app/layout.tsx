@@ -1,12 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "LocaleLore — GenAI Cultural Odyssey & Local Resident Guide",
+  title: "LocaleLore — Your Local Travel Guide",
   description:
-    "Discover authentic destinations, read immersive local stories, discover hidden artisan crafts, and explore walking routes through the eyes of local residents, powered by Google Gemini.",
+    "Get a personal, day-by-day travel plan from a local guide: the best places to visit, where to eat, walking routes, local crafts, and the stories behind each spot. Powered by Google Gemini.",
   applicationName: "LocaleLore",
   authors: [{ name: "LocaleLore" }],
   keywords: ["travel planning", "cultural heritage", "hidden gems", "artisan discovery", "Gemini AI", "My Local Guide"],
@@ -33,12 +34,15 @@ export default async function RootLayout({
       <head>
         <script nonce={nonce} suppressHydrationWarning dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body>
+      <body className="flex min-h-screen flex-col">
         <a href="#main" className="skip-link">
           Skip to content
         </a>
         <Header />
-        <main id="main">{children}</main>
+        <main id="main" className="flex-1">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );

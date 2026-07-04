@@ -6,6 +6,7 @@ import type {
   ApiErrorResponse,
   TravelContext,
   GenerateTravelResponse,
+  GuideArchetype,
   TravelPlan,
   PlanMeta,
 } from "@/lib/types";
@@ -23,6 +24,7 @@ interface GenerateState {
   plan: TravelPlan | null;
   meta: PlanMeta | null;
   error: PlanError | null;
+  guideType: GuideArchetype;
 }
 
 const INITIAL: GenerateState = {
@@ -30,6 +32,7 @@ const INITIAL: GenerateState = {
   plan: null,
   meta: null,
   error: null,
+  guideType: "historian",
 };
 
 /**
@@ -50,6 +53,7 @@ export function useGeneratePlan() {
         plan: stored.plan,
         meta: null,
         error: null,
+        guideType: stored.guideType ?? "historian",
       });
     }
     return () => controllerRef.current?.abort();
@@ -74,24 +78,26 @@ export function useGeneratePlan() {
 
       if (!response.ok) {
         const err = payload as ApiErrorResponse;
-        setState({
+        setState((prev) => ({
+          ...prev,
           status: "error",
           plan: null,
           meta: null,
           error: {
-            message: err?.error ?? "Something went wrong while curating your travel plan. Please try again.",
+            message: err?.error ?? "Something went wrong while creating your travel plan. Please try again.",
             code: err?.code ?? "upstream_error",
           },
-        });
+        }));
         return;
       }
 
       const { plan, meta } = payload as GenerateTravelResponse;
-      savePlan(plan);
-      setState({ status: "success", plan, meta, error: null });
+      savePlan(plan, context.residentGuide);
+      setState({ status: "success", plan, meta, error: null, guideType: context.residentGuide });
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") return;
-      setState({
+      setState((prev) => ({
+        ...prev,
         status: "error",
         plan: null,
         meta: null,
@@ -99,7 +105,7 @@ export function useGeneratePlan() {
           message: "Network error. Check your connection and try again.",
           code: "network",
         },
-      });
+      }));
     }
   }, []);
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { LocalMyth } from "@/lib/types";
+import { BookOpenIcon } from "@/components/ui/Icon";
 
 interface FolkloreListProps {
   myths: LocalMyth[];
@@ -37,14 +38,15 @@ export function FolkloreList({ myths }: FolkloreListProps) {
                 key={myth.id}
                 type="button"
                 onClick={() => setSelectedId(myth.id)}
-                className={`w-full text-left rounded-2xl p-4 border transition-all active:scale-[0.99] ${
+                aria-pressed={isSelected}
+                className={`w-full text-left rounded-2xl p-4 border transition-colors active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg ${
                   isSelected
                     ? "bg-accent/10 border-accent/30 text-accent font-semibold ring-1 ring-accent/20"
                     : "bg-surface border-border text-text hover:bg-surface-2"
                 }`}
               >
                 <div className="flex items-start gap-2.5">
-                  <span className="text-lg leading-none" aria-hidden="true">📖</span>
+                  <BookOpenIcon aria-hidden="true" className="h-4 w-4 shrink-0 mt-0.5" />
                   <div className="space-y-0.5">
                     <h4 className="text-xs font-bold leading-snug line-clamp-1">{myth.title}</h4>
                     <p className="text-[10px] text-muted line-clamp-1">Folklore story</p>

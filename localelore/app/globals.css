@@ -51,6 +51,10 @@
 
   html {
     scroll-behavior: smooth;
+    /* Scale the whole UI up on large/high-res displays so it stays readable
+       without browser zoom, while keeping a comfortable 16px on laptops and
+       mobile. Tailwind breakpoints are px-based, so this won't shift layout. */
+    font-size: clamp(16px, 0.5vw + 8px, 19px);
   }
 
   body {

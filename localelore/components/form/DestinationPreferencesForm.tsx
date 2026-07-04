@@ -3,6 +3,8 @@
 import { useId, useState } from "react";
 import { FormField } from "@/components/form/FormField";
 import { Button } from "@/components/ui/Button";
+import { SparklesIcon } from "@/components/ui/Icon";
+import { GUIDES } from "@/lib/guides";
 import {
   CURRENCIES,
   GUIDE_ARCHETYPES,
@@ -28,7 +30,7 @@ export function DestinationPreferencesForm({
   const [travelStyle, setTravelStyle] = useState<TravelStyle>("balanced");
   const [residentGuide, setResidentGuide] = useState<GuideArchetype>("historian");
   const [budget, setBudget] = useState("");
-  const [currency, setCurrency] = useState<Currency>("USD");
+  const [currency, setCurrency] = useState<Currency>("INR");
   const [sustainableFocus, setSustainableFocus] = useState(false);
   const [dietaryRestrictions, setDietaryRestrictions] = useState("");
   const [accessibilityNeeds, setAccessibilityNeeds] = useState("");
@@ -79,24 +81,6 @@ export function DestinationPreferencesForm({
     onSubmit(result.data);
   };
 
-  const guideLabels: Record<GuideArchetype, { title: string; desc: string; icon: string }> = {
-    historian: {
-      title: "Anya the Historian",
-      desc: "Folklore, ancient legends, & architectural heritage.",
-      icon: "📜",
-    },
-    foodie: {
-      title: "Marcus the Foodie",
-      desc: "Street carts, traditional recipes, & local markets.",
-      icon: "🍜",
-    },
-    artisan: {
-      title: "Kavi the Artisan",
-      desc: "Traditional craft workshops & sustainable co-ops.",
-      icon: "🏺",
-    },
-  };
-
   return (
     <form
       onSubmit={handleSubmit}
@@ -104,9 +88,9 @@ export function DestinationPreferencesForm({
       noValidate
     >
       <div className="space-y-1">
-        <h2 className="text-xl font-bold text-text">Design Your Odyssey</h2>
+        <h2 className="text-xl font-bold text-text">Plan your trip</h2>
         <p className="text-sm text-muted">
-          Tell us where you want to go and choose a local guide to curate your cultural timeline.
+          Tell us where you&apos;re going and pick a local guide to build your day-by-day plan.
         </p>
       </div>
 
@@ -155,8 +139,8 @@ export function DestinationPreferencesForm({
 
           <FormField
             id={`${formId}-travelStyle`}
-            label="Odyssey Focus"
-            hint="Theme of exploration"
+            label="Trip focus"
+            hint="What to focus on"
             error={errors.travelStyle}
             required
           >
@@ -167,29 +151,30 @@ export function DestinationPreferencesForm({
               disabled={isLoading}
               className="w-full rounded-lg border border-border bg-bg px-3 py-2 text-sm text-text focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none"
             >
-              <option value="balanced">Balanced Vibe</option>
-              <option value="cultural">Heritage & History</option>
-              <option value="culinary">Culinary & Foods</option>
-              <option value="artisan">Crafts & Artisans</option>
-              <option value="adventure">Hidden Explorer</option>
+              <option value="balanced">A bit of everything</option>
+              <option value="cultural">History & heritage</option>
+              <option value="culinary">Food & drink</option>
+              <option value="artisan">Crafts & artisans</option>
+              <option value="adventure">Off the beaten path</option>
             </select>
           </FormField>
         </div>
       </div>
 
       <fieldset className="space-y-3">
-        <legend className="text-sm font-semibold text-text">Choose Your Resident Guide</legend>
+        <legend className="text-sm font-semibold text-text">Choose your local guide</legend>
         <p className="text-xs text-muted">
-          Your resident guide will narrate the storytelling cards and provide local tips.
+          Your guide shapes the recommendations and shares local tips.
         </p>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {GUIDE_ARCHETYPES.map((guide) => {
             const isSelected = residentGuide === guide;
-            const info = guideLabels[guide];
+            const info = GUIDES[guide];
+            const GuideIcon = info.Icon;
             return (
               <label
                 key={guide}
-                className={`relative flex cursor-pointer flex-col rounded-xl border p-4 text-left transition-all hover:bg-bg ${
+                className={`group relative flex cursor-pointer flex-col rounded-xl border p-4 text-left transition-colors hover:border-accent/60 focus-within:ring-2 focus-within:ring-accent ${
                   isSelected
                     ? "border-accent bg-accent/5 ring-1 ring-accent"
                     : "border-border bg-surface"
@@ -204,11 +189,17 @@ export function DestinationPreferencesForm({
                   disabled={isLoading}
                   className="sr-only"
                 />
-                <span className="text-2xl" aria-hidden="true">
-                  {info.icon}
+                <span
+                  className={`flex h-9 w-9 items-center justify-center rounded-lg transition-colors ${
+                    isSelected
+                      ? "bg-accent text-accent-fg"
+                      : "bg-surface-2 text-accent group-hover:bg-accent/10"
+                  }`}
+                >
+                  <GuideIcon aria-hidden="true" className="h-5 w-5" />
                 </span>
-                <span className="mt-2 text-sm font-bold text-text">{info.title}</span>
-                <span className="mt-1 text-xs text-muted leading-relaxed">{info.desc}</span>
+                <span className="mt-2 text-sm font-bold text-text">{info.label}</span>
+                <span className="mt-1 text-xs text-muted leading-relaxed">{info.tagline}</span>
               </label>
             );
           })}
@@ -272,9 +263,9 @@ export function DestinationPreferencesForm({
               className="mt-1 h-4 w-4 rounded border-border text-accent focus:ring-accent/25"
             />
             <div className="leading-snug">
-              <span className="text-sm font-medium text-text">Sustainable Focus</span>
+              <span className="text-sm font-medium text-text">Eco-friendly focus</span>
               <p className="text-xs text-muted">
-                Prioritize indigenous artisans, carbon-neutral routes, & traditional preservation.
+                Favor local artisans, low-impact routes, and traditional crafts.
               </p>
             </div>
           </label>
@@ -337,9 +328,22 @@ export function DestinationPreferencesForm({
       <Button
         type="submit"
         disabled={isLoading}
-        className="w-full bg-brand hover:opacity-90 font-semibold py-2.5 rounded-lg text-white transition-opacity shadow-sm"
+        className="w-full bg-brand hover:opacity-95 font-semibold py-2.5 rounded-lg text-white shadow-sm transition-[opacity,box-shadow] hover:shadow-glow"
       >
-        {isLoading ? "Curating Odyssey..." : "Unveil My Cultural Odyssey"}
+        {isLoading ? (
+          <>
+            <span
+              aria-hidden="true"
+              className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white"
+            />
+            Building your plan…
+          </>
+        ) : (
+          <>
+            <SparklesIcon aria-hidden="true" className="h-4 w-4" />
+            Create my travel plan
+          </>
+        )}
       </Button>
     </form>
   );

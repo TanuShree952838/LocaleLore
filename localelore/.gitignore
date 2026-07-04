@@ -41,3 +41,4 @@ yarn-error.log*
 # IDE / tooling history (not part of the app)
 .specstory
 .cursorindexingignore
+.env*

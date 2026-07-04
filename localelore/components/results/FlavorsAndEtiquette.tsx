@@ -8,6 +8,15 @@ import type {
 } from "@/lib/types";
 import { formatMoney } from "@/lib/format";
 import { Button } from "@/components/ui/Button";
+import {
+  UtensilsCrossedIcon,
+  ClockIcon,
+  UsersIcon,
+  CalendarDaysIcon,
+  LanguagesIcon,
+  CopyIcon,
+  CheckIcon,
+} from "@/components/ui/Icon";
 
 interface FlavorsAndEtiquetteProps {
   etiquette: EtiquetteItem[];
@@ -39,8 +48,9 @@ export function FlavorsAndEtiquette({
     <div className="space-y-8">
       {/* 1. Food Recommendations */}
       <section className="space-y-4">
-        <h4 className="inline-block rounded-lg bg-surface-3 px-3 py-1 text-xs font-black text-text uppercase tracking-wider">
-          🍜 Local Flavors & Culinary Customs
+        <h4 className="inline-flex items-center gap-2 rounded-lg bg-surface-3 px-3 py-1 text-xs font-black text-text uppercase tracking-wider">
+          <UtensilsCrossedIcon aria-hidden="true" className="h-4 w-4 text-accent-2" />
+          Local Flavors &amp; Culinary Customs
         </h4>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
@@ -58,14 +68,14 @@ export function FlavorsAndEtiquette({
                 </div>
                 <p className="text-xs text-muted leading-relaxed">{dish.description}</p>
                 <div className="flex items-center gap-1.5 text-[10px] font-bold text-accent-2">
-                  <span>🕔</span>
+                  <ClockIcon aria-hidden="true" className="h-3.5 w-3.5" />
                   <span>Best visiting time: {dish.bestTime}</span>
                 </div>
               </div>
 
               {/* Resident Food Advice */}
               <div className="rounded-xl bg-bg/80 p-3 border-l-2 border-accent text-xs">
-                <span className="font-bold text-accent block mb-0.5">Resident Food Secret</span>
+                <span className="font-bold text-accent block mb-0.5">Local food tip</span>
                 <p className="text-text/90 italic leading-relaxed">&ldquo;{dish.authenticTip}&rdquo;</p>
               </div>
             </div>
@@ -76,8 +86,9 @@ export function FlavorsAndEtiquette({
       {/* 2. Etiquette & Customs */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <section className="space-y-4">
-          <h4 className="inline-block rounded-lg bg-surface-3 px-3 py-1 text-xs font-black text-text uppercase tracking-wider">
-            🤝 Unwritten Etiquette & Customs
+          <h4 className="inline-flex items-center gap-2 rounded-lg bg-surface-3 px-3 py-1 text-xs font-black text-text uppercase tracking-wider">
+            <UsersIcon aria-hidden="true" className="h-4 w-4 text-accent" />
+            Unwritten Etiquette &amp; Customs
           </h4>
 
           <div className="space-y-4">
@@ -94,7 +105,7 @@ export function FlavorsAndEtiquette({
                   {item.custom}
                 </p>
                 <p className="text-xs text-accent italic leading-relaxed">
-                  <strong className="text-accent font-semibold block not-italic">Resident Advice:</strong>
+                  <strong className="text-accent font-semibold block not-italic">Local tip:</strong>
                   &ldquo;{item.residentTip}&rdquo;
                 </p>
               </div>
@@ -104,8 +115,9 @@ export function FlavorsAndEtiquette({
 
         {/* 3. Festivals & Events */}
         <section className="space-y-4">
-          <h4 className="inline-block rounded-lg bg-surface-3 px-3 py-1 text-xs font-black text-text uppercase tracking-wider">
-            🎉 Local Festivals & Events
+          <h4 className="inline-flex items-center gap-2 rounded-lg bg-surface-3 px-3 py-1 text-xs font-black text-text uppercase tracking-wider">
+            <CalendarDaysIcon aria-hidden="true" className="h-4 w-4 text-accent" />
+            Local Festivals &amp; Events
           </h4>
 
           <div className="space-y-4">
@@ -137,14 +149,26 @@ export function FlavorsAndEtiquette({
       {/* 4. Local Phrases */}
       <section className="space-y-4">
         <div className="flex items-center justify-between gap-3">
-          <h4 className="inline-block rounded-lg bg-surface-3 px-3 py-1 text-xs font-black text-text uppercase tracking-wider">
-            🗣️ Handy Local Phrases
+          <h4 className="inline-flex items-center gap-2 rounded-lg bg-surface-3 px-3 py-1 text-xs font-black text-text uppercase tracking-wider">
+            <LanguagesIcon aria-hidden="true" className="h-4 w-4 text-accent" />
+            Handy Local Phrases
           </h4>
           <Button
             onClick={copyPhrases}
-            className="text-[11px] font-bold border border-border bg-surface hover:bg-surface-2 px-2.5 py-1 rounded-lg transition-all"
+            aria-live="polite"
+            className="gap-1.5 text-[11px] font-bold border border-border bg-surface hover:bg-surface-2 px-2.5 py-1 h-auto rounded-lg"
           >
-            {copied ? "✓ Copied to Notes" : "📋 Copy Phrases"}
+            {copied ? (
+              <>
+                <CheckIcon aria-hidden="true" className="h-3.5 w-3.5 text-success" />
+                Copied to Notes
+              </>
+            ) : (
+              <>
+                <CopyIcon aria-hidden="true" className="h-3.5 w-3.5" />
+                Copy Phrases
+              </>
+            )}
           </Button>
         </div>
 

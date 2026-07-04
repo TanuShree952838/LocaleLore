@@ -1,13 +1,25 @@
 import { useState } from "react";
 import type { TimelineSlot, Currency } from "@/lib/types";
 import { formatMoney } from "@/lib/format";
+import {
+  type LucideIcon,
+  SunriseIcon,
+  SunIcon,
+  MoonIcon,
+  CheckIcon,
+} from "@/components/ui/Icon";
 
 interface TimelineProps {
   timeline: TimelineSlot[];
   currency: Currency;
+  isEditing?: boolean;
+  onChangeSlot?: (
+    id: string,
+    patch: Partial<{ activityTitle: string; activityDescription: string; associatedCost: number }>,
+  ) => void;
 }
 
-export function Timeline({ timeline, currency }: TimelineProps) {
+export function Timeline({ timeline, currency, isEditing = false, onChangeSlot }: TimelineProps) {
   const [completedSlots, setCompletedSlots] = useState<Record<string, boolean>>({});
 
   const toggleSlot = (id: string) => {
@@ -30,13 +42,13 @@ export function Timeline({ timeline, currency }: TimelineProps) {
   const completedCount = Object.values(completedSlots).filter(Boolean).length;
   const progressPercent = totalSlots > 0 ? Math.round((completedCount / totalSlots) * 100) : 0;
 
-  const slotIcons = {
-    morning: "🌅",
-    afternoon: "☀️",
-    evening: "🌙",
+  const slotIcons: Record<TimelineSlot["slot"], LucideIcon> = {
+    morning: SunriseIcon,
+    afternoon: SunIcon,
+    evening: MoonIcon,
   };
 
-  const slotLabels = {
+  const slotLabels: Record<TimelineSlot["slot"], string> = {
     morning: "Morning",
     afternoon: "Afternoon",
     evening: "Evening",
@@ -48,7 +60,7 @@ export function Timeline({ timeline, currency }: TimelineProps) {
       <div className="flex flex-col gap-3 rounded-2xl border border-border bg-surface p-4 shadow-sm glass sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 id="timeline-heading" className="text-sm font-bold text-text">
-            Odyssey Progress
+            Trip progress
           </h3>
           <p className="text-xs text-muted">
             Mark off activities as you wander through your itinerary.
@@ -80,17 +92,22 @@ export function Timeline({ timeline, currency }: TimelineProps) {
               <div className="relative border-l border-border pl-6 ml-3 space-y-6">
                 {slots.map((slot) => {
                   const isCompleted = !!completedSlots[slot.id];
+                  const SlotIcon = slotIcons[slot.slot];
                   return (
                     <div key={slot.id} className="relative group">
                       {/* Timeline Dot/Icon */}
                       <span
-                        className={`absolute -left-[37px] top-1.5 flex h-7 w-7 items-center justify-center rounded-full border bg-surface text-xs shadow-sm transition-colors ${
+                        className={`absolute -left-[37px] top-1.5 flex h-7 w-7 items-center justify-center rounded-full border bg-surface text-[0.85rem] shadow-sm transition-colors ${
                           isCompleted
                             ? "border-accent text-accent-fg bg-accent/90"
-                            : "border-border text-text"
+                            : "border-border text-accent"
                         }`}
                       >
-                        {isCompleted ? "✓" : slotIcons[slot.slot]}
+                        {isCompleted ? (
+                          <CheckIcon aria-hidden="true" className="h-4 w-4" />
+                        ) : (
+                          <SlotIcon aria-hidden="true" className="h-4 w-4" />
+                        )}
                       </span>
 
                       {/* Timeline Body Box */}
@@ -102,18 +119,47 @@ export function Timeline({ timeline, currency }: TimelineProps) {
                         }`}
                       >
                         <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-start">
-                          <div>
-                            <div className="flex items-center gap-2">
+                          <div className="flex-1">
+                            <div className="flex flex-wrap items-center gap-2">
                               <span className="text-xs font-bold text-accent uppercase tracking-wider">
                                 {slotLabels[slot.slot]}
                               </span>
-                              <span className="text-xs text-muted">
-                                • {formatMoney(slot.associatedCost, currency)}
-                              </span>
+                              {isEditing ? (
+                                <span className="flex items-center gap-1 text-xs text-muted">
+                                  •
+                                  <input
+                                    type="number"
+                                    min={0}
+                                    value={slot.associatedCost}
+                                    onChange={(e) =>
+                                      onChangeSlot?.(slot.id, {
+                                        associatedCost: e.target.value === "" ? 0 : Number(e.target.value),
+                                      })
+                                    }
+                                    className="w-20 rounded border border-accent/40 bg-bg px-1.5 py-0.5 text-xs text-text focus:border-accent focus:outline-none"
+                                    aria-label={`Cost for ${slot.activityTitle}`}
+                                  />
+                                  {currency}
+                                </span>
+                              ) : (
+                                <span className="text-xs text-muted">
+                                  • {formatMoney(slot.associatedCost, currency)}
+                                </span>
+                              )}
                             </div>
-                            <h5 className="mt-1 text-base font-bold text-text">
-                              {slot.activityTitle}
-                            </h5>
+                            {isEditing ? (
+                              <input
+                                type="text"
+                                value={slot.activityTitle}
+                                onChange={(e) => onChangeSlot?.(slot.id, { activityTitle: e.target.value })}
+                                className="mt-1 w-full rounded border border-accent/40 bg-bg px-2 py-1 text-base font-bold text-text focus:border-accent focus:outline-none"
+                                aria-label="Activity title"
+                              />
+                            ) : (
+                              <h5 className="mt-1 text-base font-bold text-text">
+                                {slot.activityTitle}
+                              </h5>
+                            )}
                           </div>
 
                           <label className="flex items-center gap-2 cursor-pointer rounded-lg border border-border bg-bg px-2.5 py-1 text-xs font-semibold text-text transition-colors hover:bg-surface-2 select-none">
@@ -127,9 +173,21 @@ export function Timeline({ timeline, currency }: TimelineProps) {
                           </label>
                         </div>
 
-                        <p className="mt-2 text-xs text-muted leading-relaxed">
-                          {slot.activityDescription}
-                        </p>
+                        {isEditing ? (
+                          <textarea
+                            value={slot.activityDescription}
+                            onChange={(e) =>
+                              onChangeSlot?.(slot.id, { activityDescription: e.target.value })
+                            }
+                            rows={2}
+                            className="mt-2 w-full rounded border border-accent/40 bg-bg px-2 py-1 text-xs text-text leading-relaxed focus:border-accent focus:outline-none"
+                            aria-label="Activity description"
+                          />
+                        ) : (
+                          <p className="mt-2 text-xs text-muted leading-relaxed">
+                            {slot.activityDescription}
+                          </p>
+                        )}
 
                         {/* Local Resident Insight */}
                         <div className="mt-3 rounded-lg bg-bg/60 p-3 text-xs leading-relaxed border-l-2 border-accent-2">

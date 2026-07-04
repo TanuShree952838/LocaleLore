@@ -28,7 +28,7 @@ export function BudgetFeasibilityCard({ budget }: { budget: BudgetFeasibility })
     >
       <div className="flex items-center justify-between gap-3">
         <h2 id="budget-heading" className="text-sm font-bold text-text">
-          Odyssey Budget Estimator
+          Trip budget
         </h2>
         <Badge tone={meta.tone}>{meta.label}</Badge>
       </div>

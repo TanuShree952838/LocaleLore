@@ -1,5 +1,6 @@
 import type { WalkingRoute } from "@/lib/types";
 import { formatDuration } from "@/lib/format";
+import { FootprintsIcon } from "@/components/ui/Icon";
 
 interface WalkingRouteMapProps {
   route: WalkingRoute;
@@ -29,14 +30,14 @@ export function WalkingRouteMap({ route }: WalkingRouteMapProps) {
       <div className="rounded-2xl border border-border bg-surface p-5 shadow-sm glass flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
         <div>
           <span className="text-xs font-semibold text-accent uppercase tracking-wider">
-            Curated Local Walking Path
+            Your walking route
           </span>
           <h3 id="route-heading" className="text-lg font-bold text-text mt-0.5">
             {route.title}
           </h3>
         </div>
         <div className="flex h-10 items-center gap-1.5 rounded-lg bg-surface-2 px-3 py-1.5 text-xs font-bold text-text shrink-0">
-          <span>🚶</span>
+          <FootprintsIcon aria-hidden="true" className="h-4 w-4 text-accent" />
           <span>{formatDuration(route.totalDurationMinutes)} walking</span>
         </div>
       </div>

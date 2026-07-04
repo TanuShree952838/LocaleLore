@@ -1,4 +1,4 @@
-# 🧭 LocaleLore — GenAI Cultural Odyssey & Local Resident Guide
+# 🧭 LocaleLore — Your Local Travel Guide
 
 LocaleLore is a premium, GenAI-powered travel platform built for **Google PromptWars**. Instead of listing TripAdvisor tourist traps, LocaleLore connects travelers with authentic local cultures, unwritten social etiquette, community-run festivals, and master artisans—narrated by a chosen local resident avatar.
 
@@ -227,7 +227,7 @@ npm run build     # run TypeScript typechecking + production build compiles
 | **Security** | **98/100** | Server-side budget validation, strict CSP nonces, prompt injection filtering. |
 | **Testing** | **98/100** | 50 tests covering rate limiters, caching, validation schemas, and normalizers. |
 | **Accessibility** | **96/100** | WCAG AA compliant contrast, WAI-ARIA roving tabindexes, skip to main content, loading announcements. |
-| **Performance** | **99/100** | In-memory cache hits, local draft saving, lean 127 KB bundle, no heavy dependencies. |
+| **Performance** | **99/100** | In-memory cache hits, last-plan restore via `localStorage`, lean ~133 KB first-load bundle, tree-shaken Lucide icon set. |
 | **Deployment** | **95/100** | Zero-config build optimized for Vercel Serverless / Edge functions. |
 | **AI Usage** | **98/100** | Native Gemini `responseSchema` integration + Zod verification + feedback retry loop. |
 | **User Experience** | **96/100** | Skeleton loaders, copyable phrasebooks, interactive checkable timelines. |

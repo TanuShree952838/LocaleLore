@@ -6,7 +6,7 @@ describe("DestinationPreferencesForm", () => {
   it("renders key fields and the submit button", () => {
     render(<DestinationPreferencesForm onSubmit={vi.fn()} isLoading={false} />);
     expect(
-      screen.getByRole("button", { name: /unveil my cultural odyssey/i })
+      screen.getByRole("button", { name: /create my travel plan/i })
     ).toBeInTheDocument();
     expect(screen.getByLabelText(/where to\?/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/budget/i)).toBeInTheDocument();
@@ -19,7 +19,7 @@ describe("DestinationPreferencesForm", () => {
     fireEvent.change(screen.getByLabelText(/where to\?/i), { target: { value: "Kyoto, Japan" } });
     fireEvent.change(screen.getByLabelText(/budget/i), { target: { value: "600" } });
 
-    fireEvent.click(screen.getByRole("button", { name: /unveil my cultural odyssey/i }));
+    fireEvent.click(screen.getByRole("button", { name: /create my travel plan/i }));
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
     const context = onSubmit.mock.calls[0]![0];
@@ -35,7 +35,7 @@ describe("DestinationPreferencesForm", () => {
     render(<DestinationPreferencesForm onSubmit={onSubmit} isLoading={false} />);
 
     fireEvent.change(screen.getByLabelText(/where to\?/i), { target: { value: "" } });
-    fireEvent.click(screen.getByRole("button", { name: /unveil my cultural odyssey/i }));
+    fireEvent.click(screen.getByRole("button", { name: /create my travel plan/i }));
 
     expect(onSubmit).not.toHaveBeenCalled();
     expect(await screen.findByText(/destination must be at least 2 characters/i)).toBeInTheDocument();

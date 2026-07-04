@@ -13,7 +13,9 @@ import type {
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 30;
+// Allow up to 2 minutes for a generation (see REQUEST_TIMEOUT_MS in the client).
+// Note: hosts cap this (e.g. Vercel Hobby = 60s); raise the plan limit to use 120s.
+export const maxDuration = 120;
 
 const ERROR_STATUS: Record<ApiErrorCode, number> = {
   invalid_json: 400,
@@ -86,10 +88,11 @@ export async function POST(request: Request): Promise<NextResponse> {
       },
     });
   } catch (error) {
+    console.error("Detailed API Generation Error:", error);
     if (error instanceof GeminiError) {
       return errorResponse(error.code, toClientMessage(error.code));
     }
-    return errorResponse("upstream_error", "Failed to generate your travel odyssey. Please try again.");
+    return errorResponse("upstream_error", "Failed to create your travel plan. Please try again.");
   }
 }
 
