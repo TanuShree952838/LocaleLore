@@ -110,7 +110,7 @@ export function DestinationPreferencesForm({
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+      <div className="space-y-4">
         <FormField
           id={`${formId}-destination`}
           label="Where to?"

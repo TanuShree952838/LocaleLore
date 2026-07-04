@@ -10,7 +10,7 @@ import { rawTravelPlanSchema, type RawTravelPlanParsed } from "@/lib/validation/
 import type { ApiErrorCode, TravelContext } from "@/lib/types";
 
 const DEFAULT_MODEL = "gemini-2.5-flash";
-const REQUEST_TIMEOUT_MS = 20_000;
+const REQUEST_TIMEOUT_MS = 35_000;
 const MAX_OUTPUT_TOKENS = 4096;
 
 /** Error carrying a stable, client-safe code for HTTP mapping. */
