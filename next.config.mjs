@@ -1,3 +1,8 @@
+import { fileURLToPath } from "node:url";
+import { dirname } from "node:path";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 /** @type {import('next').NextConfig} */
 
 // Static security headers applied to every route. The Content-Security-Policy
@@ -13,6 +18,9 @@ const securityHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // Pin the tracing root to this app so the nested `localelore/` project (with
+  // its own lockfile) doesn't confuse Vercel's serverless bundle tracing.
+  outputFileTracingRoot: __dirname,
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

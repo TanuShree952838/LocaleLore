@@ -14,7 +14,8 @@ import type {
 // Requires Node APIs (crypto, Gemini SDK) and must never be statically cached.
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 30;
+// Headroom for the model fallback chain (primary + one repair per model).
+export const maxDuration = 60;
 
 const ERROR_STATUS: Record<ApiErrorCode, number> = {
   invalid_json: 400,

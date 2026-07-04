@@ -78,6 +78,10 @@ const config: Config = {
           "0%": { backgroundPosition: "200% center" },
           "100%": { backgroundPosition: "-200% center" },
         },
+        indeterminate: {
+          "0%": { transform: "translateX(-120%)" },
+          "100%": { transform: "translateX(420%)" },
+        },
       },
       animation: {
         shimmer: "shimmer 1.5s infinite",
@@ -89,6 +93,7 @@ const config: Config = {
         float: "float 4s ease-in-out infinite",
         "pulse-soft": "pulse-soft 1.6s ease-in-out infinite",
         sheen: "sheen 3s linear infinite",
+        indeterminate: "indeterminate 1.4s ease-in-out infinite",
       },
     },
   },

@@ -2,6 +2,7 @@ import {
   GoogleGenerativeAI,
   GoogleGenerativeAIAbortError,
   GoogleGenerativeAIFetchError,
+  type GenerationConfig,
 } from "@google/generative-ai";
 import type { ZodError } from "zod";
 import { geminiResponseSchema } from "@/lib/gemini/schema";
@@ -9,9 +10,32 @@ import { buildPrompt, buildRepairPrompt } from "@/lib/gemini/prompt";
 import { rawMealPlanSchema, type RawMealPlanParsed } from "@/lib/validation/output";
 import type { ApiErrorCode, DayContext } from "@/lib/types";
 
-const DEFAULT_MODEL = "gemini-2.0-flash";
-const REQUEST_TIMEOUT_MS = 25_000;
+/**
+ * Ordered fallback model chain. gemini-2.0-flash was retired from v1beta
+ * (HTTP 404), so we default to the current 2.5 models. An env override
+ * (GEMINI_MODEL) is tried first.
+ */
+const MODEL_FALLBACK_CHAIN = ["gemini-2.5-flash", "gemini-2.5-flash-lite"];
+const REQUEST_TIMEOUT_MS = 45_000;
 const MAX_OUTPUT_TOKENS = 4096;
+
+/**
+ * Shared generation config.
+ *
+ * `thinkingConfig.thinkingBudget: 0` is critical: by default gemini-2.5-flash
+ * spends "thinking" tokens from the same `maxOutputTokens` budget, which
+ * truncated the JSON (~600 chars) and caused parse failures + slow (~21s)
+ * responses. With thinking off, responses are complete and ~12s.
+ */
+function buildGenerationConfig(): GenerationConfig {
+  return {
+    responseMimeType: "application/json",
+    responseSchema: geminiResponseSchema,
+    temperature: 0.5,
+    maxOutputTokens: MAX_OUTPUT_TOKENS,
+    thinkingConfig: { thinkingBudget: 0 },
+  } as GenerationConfig;
+}
 
 /** Error carrying a stable, client-safe code for HTTP mapping. */
 export class GeminiError extends Error {
@@ -50,36 +74,51 @@ export async function generateMealPlan(context: DayContext): Promise<GeneratedPl
     throw new GeminiError("misconfigured", "GEMINI_API_KEY is not configured");
   }
 
-  const modelName = process.env.GEMINI_MODEL?.trim() || DEFAULT_MODEL;
-  const model = new GoogleGenerativeAI(apiKey).getGenerativeModel({
-    model: modelName,
-    generationConfig: {
-      responseMimeType: "application/json",
-      responseSchema: geminiResponseSchema,
-      temperature: 0.5,
-      maxOutputTokens: MAX_OUTPUT_TOKENS,
-    },
-  });
+  // Allow overriding the primary model via env; try it first, then the chain.
+  const envModel = process.env.GEMINI_MODEL?.trim();
+  const chain = envModel
+    ? [envModel, ...MODEL_FALLBACK_CHAIN.filter((m) => m !== envModel)]
+    : MODEL_FALLBACK_CHAIN;
 
-  const firstText = await callModel(model, buildPrompt(context));
-  const firstParse = parsePlan(firstText);
-  if (firstParse.ok) {
-    return { plan: firstParse.value, model: modelName };
+  const genAI = new GoogleGenerativeAI(apiKey);
+  let lastError: GeminiError = new GeminiError("upstream_error", "All models exhausted");
+
+  for (const modelName of chain) {
+    try {
+      const model = genAI.getGenerativeModel({
+        model: modelName,
+        generationConfig: buildGenerationConfig(),
+      });
+
+      const firstText = await callModel(model, buildPrompt(context));
+      const firstParse = parsePlan(firstText);
+      if (firstParse.ok) {
+        return { plan: firstParse.value, model: modelName };
+      }
+
+      const repairedText = await callModel(
+        model,
+        buildRepairPrompt(context, firstText, firstParse.reason),
+      );
+      const repairedParse = parsePlan(repairedText);
+      if (repairedParse.ok) {
+        return { plan: repairedParse.value, model: modelName };
+      }
+
+      lastError = new GeminiError(
+        "invalid_ai_output",
+        `The AI response did not match the required format: ${repairedParse.reason}`,
+      );
+    } catch (err) {
+      const geminiErr = err instanceof GeminiError ? err : classifyError(err);
+      // A bad key won't be fixed by trying another model — fail fast.
+      if (geminiErr.code === "misconfigured") throw geminiErr;
+      lastError = geminiErr;
+      // rate_limited / timeout / upstream_error / empty_response → try next model
+    }
   }
 
-  const repairedText = await callModel(
-    model,
-    buildRepairPrompt(context, firstText, firstParse.reason),
-  );
-  const repairedParse = parsePlan(repairedText);
-  if (repairedParse.ok) {
-    return { plan: repairedParse.value, model: modelName };
-  }
-
-  throw new GeminiError(
-    "invalid_ai_output",
-    "The AI response did not match the required format",
-  );
+  throw lastError;
 }
 
 async function callModel(

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -35,12 +36,13 @@ export default async function RootLayout({
       <head>
         <script nonce={nonce} dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body>
+      <body className="flex min-h-screen flex-col">
         <a href="#main" className="skip-link">
           Skip to content
         </a>
         <Header />
-        <main id="main">{children}</main>
+        <main id="main" className="flex-1">{children}</main>
+        <Footer />
       </body>
     </html>
   );

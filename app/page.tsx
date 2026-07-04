@@ -6,6 +6,7 @@ import { useGeneratePlan } from "@/hooks/useGeneratePlan";
 import { DayContextForm } from "@/components/form/DayContextForm";
 import { PlanDashboard } from "@/components/results/PlanDashboard";
 import { PlanSkeleton } from "@/components/results/PlanSkeleton";
+import { GeneratingIndicator } from "@/components/results/GeneratingIndicator";
 import { ResultsErrorBoundary } from "@/components/results/ResultsErrorBoundary";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ErrorBanner } from "@/components/ui/ErrorBanner";
@@ -54,7 +55,12 @@ export default function HomePage() {
         </section>
 
         <section aria-label="Your cooking plan" aria-busy={status === "loading"}>
-          {status === "loading" && <PlanSkeleton />}
+          {status === "loading" && (
+            <div className="flex flex-col gap-4">
+              <GeneratingIndicator />
+              <PlanSkeleton />
+            </div>
+          )}
 
           {status === "error" && error && (
             <ErrorBanner message={error.message} onRetry={lastContext ? handleRetry : undefined} />
