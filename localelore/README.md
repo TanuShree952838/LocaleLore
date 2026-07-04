@@ -14,6 +14,22 @@ Everything runs **end-to-end with real Gemini responses** — no mock data, no h
 
 ---
 
+## 🧱 Tech Stack
+
+| Layer      | Choice                                        |
+| ---------- | --------------------------------------------- |
+| Framework  | **Next.js 15** (App Router)                   |
+| Language   | **TypeScript** (strict)                       |
+| Styling    | **Tailwind CSS** (CSS‑variable theming)       |
+| Icons      | **lucide-react**                              |
+| AI         | **Google Gemini** via `@google/generative-ai` |
+| Validation | **Zod** (input + AI output)                   |
+| PDF export | **jsPDF** (lazy‑loaded on demand)             |
+| Testing    | **Vitest** + Testing Library                  |
+| Hosting    | **Vercel**                                    |
+
+---
+
 ## 🏛️ Phase 1: Challenge Analysis
 
 ### The Problem
