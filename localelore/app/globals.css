@@ -1,0 +1,193 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: "Outfit", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", monospace;
+  --font-serif: "Playfair Display", Georgia, serif;
+
+  /* Material Design 3 inspired light theme tokens */
+  --bg: 250 250 252;
+  --surface: 255 255 255;
+  --surface-2: 243 244 249;
+  --surface-3: 232 235 243;
+  --border: 224 227 236;
+  --text: 26 28 35;
+  --muted: 90 94 109;
+  
+  --accent: 79 70 229;       /* MD3 Primary: Royal Violet */
+  --accent-2: 194 120 3;      /* MD3 Tertiary: Ochre Gold */
+  --accent-fg: 255 255 255;
+  
+  --success: 13 148 136;     /* Teal 600 */
+  --warning: 217 119 6;      /* Amber 600 */
+  --danger: 220 38 38;       /* Red 600 */
+}
+
+.dark {
+  /* Material Design 3 inspired dark theme tokens */
+  --bg: 14 15 23;
+  --surface: 22 24 37;
+  --surface-2: 30 33 50;
+  --surface-3: 39 42 63;
+  --border: 50 54 77;
+  --text: 240 241 247;
+  --muted: 153 158 179;
+  
+  --accent: 143 154 255;     /* MD3 Primary Light: Soft Indigo */
+  --accent-2: 245 158 11;     /* MD3 Tertiary Light: Soft Amber */
+  --accent-fg: 14 15 23;
+  
+  --success: 45 212 191;
+  --warning: 251 191 36;
+  --danger: 248 113 113;
+}
+
+@layer base {
+  * {
+    border-color: rgb(var(--border));
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: rgb(var(--bg));
+    color: rgb(var(--text));
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    
+    /* MD3-inspired ambient background glow for premium feel */
+    background-image:
+      radial-gradient(
+        80rem 40rem at 100% -10%,
+        rgb(var(--accent-2) / 0.06),
+        transparent 60%
+      ),
+      radial-gradient(
+        70rem 35rem at -10% 0%,
+        rgb(var(--accent) / 0.05),
+        transparent 55%
+      );
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+  }
+
+  ::selection {
+    background-color: rgb(var(--accent) / 0.22);
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background-image: linear-gradient(
+      100deg,
+      rgb(var(--accent)),
+      rgb(var(--accent-2))
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .bg-brand {
+    background-image: linear-gradient(
+      135deg,
+      rgb(var(--accent)),
+      rgb(var(--accent-2))
+    );
+  }
+
+  /* MD3 glassmorphism effect */
+  .glass {
+    background-color: rgb(var(--surface) / 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgb(var(--border) / 0.4);
+  }
+
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+  }
+  
+  .skip-link:focus {
+    left: 0.5rem;
+    top: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    background-color: rgb(var(--accent));
+    color: rgb(var(--accent-fg));
+    font-weight: 600;
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--border)) transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgb(var(--border));
+    border-radius: 9999px;
+  }
+}
+
+/* Custom micro-animations and transitions */
+@keyframes routePulse {
+  0% {
+    stroke-dashoffset: 24;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-route {
+  stroke-dasharray: 8 4;
+  animation: routePulse 2s linear infinite;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.35s cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-route {
+    animation: none !important;
+    stroke-dasharray: none !important;
+  }
+}
